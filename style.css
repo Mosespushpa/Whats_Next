@@ -1,0 +1,57 @@
+body { 
+    margin: 0; 
+    background: #0d1117; 
+    font-family: 'Segoe UI', sans-serif; 
+    overflow: hidden; 
+    display: flex;
+}
+
+.main-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column; /* Default: Mobile/Tab Stacked */
+}
+
+/* Tree Section */
+#tree-container { 
+    flex: 1; /* Takes up available space */
+    width: 100%;
+    cursor: grab;
+    border-bottom: 1px solid #30363d;
+}
+
+/* Info Section */
+#info-panel { 
+    height: 30vh; /* Fixed height on mobile */
+    background: #161b22;
+    color: #ecf0f1;
+    padding: 15px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+/* Desktop & Laptop Styling */
+@media (min-width: 1024px) {
+    .main-container {
+        flex-direction: row; /* Horizontal split for large screens */
+    }
+    #tree-container {
+        flex: 0 0 75%;
+        height: 100%;
+        border-bottom: none;
+        border-right: 1px solid #30363d;
+    }
+    #info-panel {
+        flex: 0 0 25%;
+        height: 100%;
+    }
+}
+
+/* D3 Elements */
+.node circle { stroke: #2980b9; stroke-width: 3px; cursor: pointer; }
+.node text { font-size: 14px; fill: #ecf0f1; font-weight: 500; pointer-events: none; }
+.link { fill: none; stroke: #444; stroke-width: 2px; }
+.spark { fill: #ff9f43; pointer-events: none; }
+
+#info-title { color: #ff9f43; margin-top: 0; font-size: 1.2rem; }
