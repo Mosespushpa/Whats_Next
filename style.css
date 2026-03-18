@@ -15,10 +15,18 @@ body {
 
 /* Tree Section */
 #tree-container { 
-    flex: 1; /* Takes up available space */
+    flex: 1; 
     width: 100%;
-    cursor: grab;
-    border-bottom: 1px solid #30363d;
+    height: 100%; /* Ensure it fills the flex item */
+    background: #0d1117;
+    overflow: hidden;
+    position: relative;
+}
+
+svg {
+    width: 100%;
+    height: 100%;
+    display: block; /* Removes weird inline padding */
 }
 
 /* Info Section */
@@ -55,3 +63,36 @@ body {
 .spark { fill: #ff9f43; pointer-events: none; }
 
 #info-title { color: #ff9f43; margin-top: 0; font-size: 1.2rem; }
+
+.tree-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+}
+
+.tree-controls button {
+    background: #161b22;
+    border: 1px solid #30363d;
+    color: #ecf0f1;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.tree-controls button:hover {
+    background: #30363d;
+    border-color: #ff9f43; /* Logo Orange */
+    color: #ff9f43;
+}
+
+.tree-controls svg {
+    stroke: currentColor;
+}

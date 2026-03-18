@@ -10,7 +10,15 @@
 <body>
 
     <div class="main-container">
-        <div id="tree-container"></div>
+        <header class="page-header" style="position: absolute; top: 15px; left: 15px; z-index: 100;">
+            <img src="logo.png" alt="What's_Next Logo" style="height: 60px;">
+        </header>
+
+        <div id="tree-container">
+            <div id="ai-status" style="position: absolute; top: 80px; left: 20px; color: #ff9f43; font-size: 12px;">
+            ● AI Guide Active
+            </div>
+        </div>
 
         <div id="info-panel">
             <h2 id="info-title">Hover over a node</h2>
@@ -19,6 +27,20 @@
                 <p>Detailed information about the selected API element will appear here.</p>
             </div>
         </div>
+        <div class="tree-controls">
+        <button onclick="fitToScreen()" title="Fit to Screen">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+            </svg>
+            Fit Screen
+        </button>
+        <button onclick="resetTree()" title="Collapse All">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18M3 6h18M3 18h18"/>
+            </svg>
+            Reset Path
+        </button>
+    </div>
     </div>
 
     <script src="script.js"></script>

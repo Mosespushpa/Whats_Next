@@ -1,100 +1,90 @@
-// 1. DATA WITH DESCRIPTIONS
+// 1. DATA (Updated for Career Path Project)
 const data = {
     "name": "After 10th",
-    "description": "Basic 10th standard.",
+    "description": "The crossroads after secondary school. Explore paths like Intermediate, Diploma, or Vocational courses.",
     "children": [
         {
             "name": "Intermediate",
-            "description": "Standard RESTful endpoints for resource management.",
+            "description": "2-year course (Class 11 & 12). The most common path for higher education.",
             "children": [
-                { "name": "MPC", "description": "User profile and account management." },
-                { "name": "BiPC", "description": "Transaction and order history logs." },
-                { "name": "CEC", "description": "User profile and account management." },
-                { "name": "HEC", "description": "Transaction and order history logs." },
-                { "name": "MEC", "description": "User profile and account management." },
-                { "name": "Agriculture", "description": "Transaction and order history logs." }
+                { "name": "MPC", "description": "Maths, Physics, Chemistry. Path to Engineering and Architecture." },
+                { "name": "BiPC", "description": "Biology, Physics, Chemistry. Path to Medicine and Pharmacy." },
+                { "name": "CEC", "description": "Commerce, Economics, Civics. Path to CA, Business, and Law." },
+                { "name": "MEC", "description": "Maths, Economics, Commerce. Great for Finance and Management." }
             ]
         },
         {
-            "name": "Poly",
-            "description": "Authentication layers including JWT and OAuth2.",
-            "children": [{ "name": "CSE", "description": "Secure delegated access protocol." }]
+            "name": "Polytechnic",
+            "description": "3-year Diploma in Engineering fields. Faster route to technical jobs.",
+            "children": [
+                { "name": "Mechanical", "description": "Design and manufacturing of machines." },
+                { "name": "CSE", "description": "Software development and computer hardware." }
+            ]
         },
         {
             "name": "ITI",
-            "description": "Authentication layers including JWT and OAuth2.",
-            "children": [{ "name": "CSE", "description": "Secure delegated access protocol." }]
-        },
-        {
-            "name": "Job",
-            "description": "Authentication layers including JWT and OAuth2.",
-            "children": [
-                { "name": "Police", "description": "Secure delegated access protocol." },
-                { "name": "Army", "description": "Secure delegated access protocol." },
-                { "name": "Government", "description": "Secure delegated access protocol." }
-            ]
-        },
-         {
-            "name": "Business",
-            "description": "Authentication layers including JWT and OAuth2.",
-            "children": [{ "name": "CSE", "description": "Secure delegated access protocol." }]
+            "description": "Vocational training for specialized industrial skills.",
+            "children": [{ "name": "Electrician", "description": "Industrial and domestic electrical work." }]
         }
     ]
 };
-// ... [Data object remains the same as before] ...
 
 let width, height, svg, g, treeLayout, root;
 const duration = 600;
 const sparkDuration = 500;
 let i = 0;
 
-// Function to handle dynamic sizing
 function init() {
-    // Clear existing SVG if resizing
     d3.select("#tree-container").selectAll("*").remove();
-
     const container = document.getElementById("tree-container");
     width = container.clientWidth;
     height = container.clientHeight;
 
-    svg = d3.select("#tree-container").append("svg")
+    const svgElement = d3.select("#tree-container").append("svg")
         .attr("width", "100%")
-        .attr("height", "100%")
-        .call(d3.zoom().on("zoom", (event) => g.attr("transform", event.transform)))
-        .append("g");
+        .attr("height", "100%");
 
-    // Define filter (needs to be re-added on re-init)
+    const zoom = d3.zoom()
+        .scaleExtent([0.5, 2])
+        .on("zoom", (event) => g.attr("transform", event.transform));
+
+    svg = svgElement.call(zoom);
+    g = svg.append("g");
+
+    // Define Filter for Spark
     const defs = svg.append("defs");
     const filter = defs.append("filter").attr("id", "spark-glow");
-    filter.append("feGaussianBlur").attr("stdDeviation", "2.5").attr("result", "coloredBlur");
+    filter.append("feGaussianBlur").attr("stdDeviation", "2.5").attr("result", "blur");
     const feMerge = filter.append("feMerge");
-    feMerge.append("feMergeNode").attr("in", "coloredBlur");
+    feMerge.append("feMergeNode").attr("in", "blur");
     feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
-    g = svg.append("g").attr("transform", `translate(80, ${height / 2})`);
+    // Set Initial Position
+    const initialTransform = d3.zoomIdentity.translate(150, height / 2).scale(1);
+    svg.call(zoom.transform, initialTransform);
 
-    // Responsive spacing: tighten gaps on small screens
-    const horizontalGap = width < 600 ? 120 : 200;
-    treeLayout = d3.tree().nodeSize([60, horizontalGap]);
-
+    treeLayout = d3.tree().nodeSize([60, 200]);
     root = d3.hierarchy(data, d => d.children);
-    root.x0 = 0; root.y0 = 0;
-
-    function collapseAll(d) {
-        if (d.children) {
-            d._children = d.children;
-            d._children.forEach(collapseAll);
-            d.children = null;
-        }
-    }
+    root.x0 = 0; 
+    root.y0 = 0;
 
     collapseAll(root);
     update(root);
 }
 
-// Re-run init when screen size changes
+function collapseAll(d) {
+    if (d.children) {
+        d._children = d.children;
+        d._children.forEach(collapseAll);
+        d.children = null;
+    }
+}
+
+// Ensure init runs on load
+window.onload = init;
 window.onresize = init;
-init();
+
+// ... Keep your existing update(), diagonal(), fitToScreen(), and resetTree() functions below ...
 
 function update(source) {
     const treeData = treeLayout(root);
@@ -180,4 +170,57 @@ function update(source) {
 
 function diagonal(s, d) {
     return `M ${s.y} ${s.x} C ${(s.y + d.y) / 2} ${s.x}, ${(s.y + d.y) / 2} ${d.x}, ${d.y} ${d.x}`;
+}
+
+/**
+ * Zoom and pan the camera to show the entire visible tree
+ */
+function fitToScreen() {
+    const bounds = g.node().getBBox();
+    const parent = d3.select("#tree-container").node();
+    const fullWidth = parent.clientWidth;
+    const fullHeight = parent.clientHeight;
+    
+    const width = bounds.width;
+    const height = bounds.height;
+    const midX = bounds.x + width / 2;
+    const midY = bounds.y + height / 2;
+    
+    if (width === 0 || height === 0) return; // Nothing to fit
+
+    // Calculate scale with 10% padding
+    const scale = 0.85 / Math.max(width / fullWidth, height / fullHeight);
+    
+    // Smooth transition to the new center
+    svg.transition().duration(750).call(
+        d3.zoom().on("zoom", (event) => g.attr("transform", event.transform)).transform,
+        d3.zoomIdentity
+            .translate(fullWidth / 2, fullHeight / 2)
+            .scale(scale)
+            .translate(-midX, -midY)
+    );
+}
+
+/**
+ * Collapses all nodes and centers the root
+ */
+function resetTree() {
+    // 1. Collapse everything
+    collapseAll(root);
+    update(root);
+    
+    // 2. Center the root node again
+    const container = document.getElementById("tree-container");
+    const initialTransform = d3.zoomIdentity
+        .translate(150, container.clientHeight / 2)
+        .scale(1);
+
+    svg.transition().duration(750).call(
+        d3.zoom().on("zoom", (event) => g.attr("transform", event.transform)).transform, 
+        initialTransform
+    );
+    
+    // 3. Clear the info panel
+    document.getElementById("info-title").innerText = "Hover over a node";
+    document.getElementById("info-content").innerHTML = "<p>Detailed information will appear here.</p>";
 }
