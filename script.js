@@ -29,7 +29,7 @@ const data = {
     ]
 };
 
-let width, height, svg, g, treeLayout, root;
+let width, height, svg, g, treeLayout, root, zoom;
 const duration = 600;
 const sparkDuration = 500;
 let i = 0;
@@ -44,7 +44,7 @@ function init() {
         .attr("width", "100%")
         .attr("height", "100%");
 
-    const zoom = d3.zoom()
+    zoom = d3.zoom()
         .scaleExtent([0.5, 2])
         .on("zoom", (event) => g.attr("transform", event.transform));
 
@@ -146,7 +146,7 @@ function update(source) {
         linkTransition.end().then(() => {
             g.selectAll("circle.spark-instance")
                 .data(relevantLinks, d => `spark-${d.source.id}-${d.target.id}`)
-                .join("circle")
+                .enter().append("circle")
                 .attr("class", "spark")
                 .attr("r", 4)
                 .attr("filter", "url(#spark-glow)")
@@ -161,7 +161,7 @@ function update(source) {
                         return `translate(${pt.x},${pt.y})`;
                     };
                 })
-                .style("opacity", 0).remove();
+                .transition().duration(200).style("opacity", 0).remove();
         });
     }
 
@@ -193,7 +193,7 @@ function fitToScreen() {
     
     // Smooth transition to the new center
     svg.transition().duration(750).call(
-        d3.zoom().on("zoom", (event) => g.attr("transform", event.transform)).transform,
+        zoom.transform,
         d3.zoomIdentity
             .translate(fullWidth / 2, fullHeight / 2)
             .scale(scale)
@@ -215,10 +215,7 @@ function resetTree() {
         .translate(150, container.clientHeight / 2)
         .scale(1);
 
-    svg.transition().duration(750).call(
-        d3.zoom().on("zoom", (event) => g.attr("transform", event.transform)).transform, 
-        initialTransform
-    );
+    svg.transition().duration(750).call(zoom.transform, initialTransform);
     
     // 3. Clear the info panel
     document.getElementById("info-title").innerText = "Hover over a node";
