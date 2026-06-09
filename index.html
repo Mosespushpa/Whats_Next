@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="default">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,38 +9,45 @@
 </head>
 <body>
 
-    <div class="main-container">
-        <header class="page-header">
-            <img src="logo.png" alt="What's Next Logo">
-        </header>
-
-        <div id="tree-container">
-            <div id="ai-status" style="position: absolute; top: 80px; left: 20px; color: #ff9f43; font-size: 12px;">
-            ● AI Guide Active
-            </div>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <img src="logo.png" alt="What's Next Logo" class="navbar-logo">
         </div>
+        <div class="navbar-right">
+           
+            <div class="search-wrap">
+                <input type="text" id="search-input" class="search-input" placeholder="Search nodes..." oninput="searchNodes(this.value)">
+                <button class="nav-btn search-toggle" onclick="toggleSearch()" title="Search">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                </button>
+            </div>
+            <div class="theme-btns">
+                <button class="theme-btn" id="theme-default" onclick="setTheme('default')" title="Default">◑</button>
+                <button class="theme-btn" id="theme-dark" onclick="setTheme('dark')" title="Dark">☾</button>
+                <button class="theme-btn" id="theme-white" onclick="setTheme('white')" title="Light">☀</button>
+            </div>
+             <button onclick="fitToScreen()" class="nav-btn" title="Fit to Screen">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                Fit Screen
+            </button>
+            <button onclick="resetTree()" class="nav-btn" title="Reset">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+                Reset
+            </button>
+        </div>
+    </nav>
 
+    <div class="main-container">
+        <div id="tree-container">
+            <div id="ai-status" style="position: absolute; top: 15px; left: 20px; font-size: 12px;">● AI Guide Active</div>
+        </div>
         <div id="info-panel">
             <h2 id="info-title">Hover over a node</h2>
             <hr>
             <div id="info-content">
-                <p>Detailed information about the selected API element will appear here.</p>
+                <p>Detailed information about the selected node will appear here.</p>
             </div>
         </div>
-        <div class="tree-controls">
-        <button onclick="fitToScreen()" title="Fit to Screen">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-            </svg>
-            Fit Screen
-        </button>
-        <button onclick="resetTree()" title="Collapse All">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 12h18M3 6h18M3 18h18"/>
-            </svg>
-            Reset Path
-        </button>
-    </div>
     </div>
 
     <script src="script.js"></script>

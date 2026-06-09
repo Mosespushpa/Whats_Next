@@ -1,4 +1,26 @@
-// 1. DATA (Updated for Career Path Project)
+// Theme colors map for D3 elements
+const themes = {
+    default: { nodeCollapsed: '#3498db', nodeLeaf: '#ffffff', link: '#444444', text: '#ecf0f1' },
+    dark:    { nodeCollapsed: '#1a6fa8', nodeLeaf: '#cccccc', link: '#333333', text: '#e0e0e0' },
+    white:   { nodeCollapsed: '#2e86c1', nodeLeaf: '#1a1a1a', link: '#aaaaaa', text: '#1a1a1a' }
+};
+
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('wn-theme', theme);
+    // Update active button
+    document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+    const activeBtn = document.getElementById(`theme-${theme}`);
+    if (activeBtn) activeBtn.classList.add('active');
+    // Re-color live D3 nodes and links
+    if (g) {
+        const t = themes[theme];
+        g.selectAll('g.node circle').style('fill', d => d._children ? t.nodeCollapsed : t.nodeLeaf);
+        g.selectAll('g.node text').style('fill', t.text);
+        g.selectAll('path.link').style('stroke', t.link);
+    }
+}
+
 const data = {
     "name": "After 10th",
     "description": "The crossroads after secondary school. Explore paths like Intermediate, Diploma, or Vocational courses.",
@@ -80,8 +102,35 @@ function collapseAll(d) {
     }
 }
 
-// Ensure init runs on load
-window.onload = init;
+function toggleSearch() {
+    const input = document.getElementById('search-input');
+    input.classList.toggle('open');
+    if (input.classList.contains('open')) {
+        input.focus();
+    } else {
+        input.value = '';
+        searchNodes('');
+    }
+}
+
+function searchNodes(query) {
+    if (!g) return;
+    const q = query.trim().toLowerCase();
+    if (!q) {
+        g.selectAll('g.node').classed('highlighted', false).classed('dimmed', false);
+        g.selectAll('path.link').classed('dimmed', false);
+        return;
+    }
+    const matchedIds = new Set();
+    g.selectAll('g.node').each(function(d) {
+        const matches = d.data.name.toLowerCase().includes(q);
+        d3.select(this).classed('highlighted', matches).classed('dimmed', !matches);
+        if (matches) matchedIds.add(d.id);
+    });
+    g.selectAll('path.link').classed('dimmed', d => !matchedIds.has(d.target.id));
+}
+
+window.onload = () => { setTheme(localStorage.getItem('wn-theme') || 'default'); init(); };
 window.onresize = init;
 
 // ... Keep your existing update(), diagonal(), fitToScreen(), and resetTree() functions below ...
@@ -108,13 +157,17 @@ function update(source) {
         .on('mouseover', (event, d) => {
             document.getElementById("info-title").innerText = d.data.name;
             document.getElementById("info-content").innerHTML = `<p>${d.data.description || "No description."}</p>`;
-            d3.select(event.currentTarget).select("circle").style("fill", "#ff9f43");
+            d3.select(event.currentTarget).select("circle").style("fill", "var(--accent)");
         })
         .on('mouseout', (event, d) => {
-            d3.select(event.currentTarget).select("circle").style("fill", d._children ? "#3498db" : "#fff");
+            const t = themes[document.documentElement.getAttribute('data-theme') || 'default'];
+            d3.select(event.currentTarget).select("circle").style("fill", d._children ? t.nodeCollapsed : t.nodeLeaf);
         });
 
-    nodeEnter.append('circle').attr('r', 10).style("fill", d => d._children ? "#3498db" : "#fff");
+    nodeEnter.append('circle').attr('r', 10).style("fill", d => {
+        const t = themes[document.documentElement.getAttribute('data-theme') || 'default'];
+        return d._children ? t.nodeCollapsed : t.nodeLeaf;
+    });
     
     // Mobile text size adjustment
     nodeEnter.append('text')
@@ -122,11 +175,15 @@ function update(source) {
         .attr("x", -15)
         .attr("text-anchor", "end")
         .style("font-size", width < 600 ? "11px" : "14px")
+        .style("fill", () => themes[document.documentElement.getAttribute('data-theme') || 'default'].text)
         .text(d => d.data.name);
 
     const nodeUpdate = nodeEnter.merge(node);
     nodeUpdate.transition().duration(duration).attr("transform", d => `translate(${d.y},${d.x})`);
-    nodeUpdate.select('circle').style("fill", d => d._children ? "#3498db" : "#fff");
+    nodeUpdate.select('circle').style("fill", d => {
+        const t = themes[document.documentElement.getAttribute('data-theme') || 'default'];
+        return d._children ? t.nodeCollapsed : t.nodeLeaf;
+    });
 
     node.exit().transition().duration(duration).attr("transform", d => `translate(${source.y},${source.x})`).remove();
 
