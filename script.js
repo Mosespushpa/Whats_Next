@@ -29,8 +29,72 @@ const data = {
             "name": "Intermediate",
             "description": "2-year course (Class 11 & 12). The most common path for higher education.",
             "children": [
-                { "name": "MPC", "description": "Maths, Physics, Chemistry. Path to Engineering and Architecture." },
-                { "name": "BiPC", "description": "Biology, Physics, Chemistry. Path to Medicine and Pharmacy." },
+                { "name": "MPC", "description": "Maths, Physics, Chemistry. Path to Engineering and Architecture." ,
+                    "children": [
+                        { "name": "Engineering", "description": "Bachelor's in Engineering (B.Tech/B.E.)",
+                            "children": [
+                                { "name": "B.Tech", "description": "Bachelor of Technology in various specializations.",
+                                    "children": [
+                                        { "name": "CSE", "description": "Bachelor of Technology in Computer Science and Engineering." },
+                                        { "name": "AI/ML", "description": "Bachelor of Technology in Artificial Intelligence and Machine Learning." },
+                                        { "name": "Data Science", "description": "Bachelor of Technology in Computer Science and Engineering - Data Science." },
+                                        { "name": "IOT", "description": "Bachelor of Technology in Computer Science and Engineering - IOT." },
+                                        { "name": "Civil", "description": "Bachelor of Technology in Civil Engineering." },
+                                        { "name": "Mechanical", "description": "Bachelor of Technology in Mechanical Engineering." },
+                                        { "name": "Electrical", "description": "Bachelor of Technology in Electrical Engineering." },
+                                        { "name": "Electronics", "description": "Bachelor of Technology in Electronics and Communication Engineering." },
+                                        { "name": "Chemical", "description": "Bachelor of Technology in Chemical Engineering." }
+                                    ]
+                                 },
+                                { "name": "B.E.", "description": "Bachelor of Engineering in various specializations." },
+                        ]},
+                        { "name": "Architecture", "description": "Bachelor's in Architecture (B.Arch)." },
+                        { "name": "National_level_Exams", "description": "National level Enterance Exam Test for Admission in Engineering Universities",
+                            "children": [
+                                { "name": "JEE Main/Advanced", "description": "National-level engineering entrance exam." },
+                                { "name": "BITSAT", "description": "University-level engineering entrance exam for BITS Pilani." },
+                                { "name": "B.Arch", "description": "Architecture entrance exam for National Institutes." },
+                                { "name": "NATA", "description": "National Aptitude Test for Architecture." },
+                                { "name": "VITEEE", "description": "Vel Tech Engineering entrance exam." },
+                                { "name": "SRMEEE", "description": "SRM Institute of Science and Technology engineering entrance exam." },
+                            ]},
+                        { "name": "State_level_Exams", "description": "State level Enterance Exam Test for Admission in Engineering Universities",
+                            "children": [
+                                { "name": "WBJEE", "description": "West Bengal engineering entrance exam." },
+                                { "name": "EAMCET", "description": "Engineering, Agriculture, and Medical Common Entrance Test for Telangana." },
+                                { "name": "UPSEE", "description": "Uttar Pradesh engineering entrance exam." },
+                                { "name": "KEAM", "description": "Kerala engineering entrance exam." },
+                                { "name": "AP EAMCET", "description": "Andhra Pradesh engineering entrance exam." },
+                                { "name": "WBJEE", "description": "West Bengal engineering entrance exam." },
+                                { "name": "TS EAMCET", "description": "Telangana engineering entrance exam." },
+                                { "name": "MHT-CET", "description": "Maharashtra engineering entrance exam." },
+                                { "name": "GCET", "description": "Government engineering entrance exam for various states." },
+                       
+                            ]}
+                       
+                ]},
+                { "name": "BiPC", "description": "Biology, Physics, Chemistry. Path to Medicine and Pharmacy.",
+                    "children": [
+                        { "name": "Medicine", "description": "Bachelor's in Medicine (MBBS) and related fields.",
+                            "children": [
+                                { "name": "MBBS", "description": "Bachelor of Medicine, Bachelor of Surgery." },
+                                { "name": "BDS", "description": "Bachelor of Dental Surgery." },
+                                { "name": "BAMS", "description": "Bachelor of Ayurvedic Medicine and Surgery." },
+                                { "name": "BHMS", "description": "Bachelor of Homeopathic Medicine and Surgery." },
+                            ]},
+                        { "name": "Pharmacy", "description": "Bachelor's in Pharmacy (B.Pharm).",
+                            "children": [
+                                { "name": "B.Pharm", "description": "Bachelor of Pharmacy in various specializations." },
+                            ]
+                         },
+                        { "name": "National_level_Exams", "description": "National level Enterance Exam Test for Admission in Medical and Pharmacy Universities",
+                            "children": [
+                                { "name": "NEET", "description": "National Eligibility cum Entrance Test for medical courses." },
+                                { "name": "AIIMS", "description": "All India Institute of Medical Sciences entrance exam." },
+                                { "name": "JIPMER", "description": "Jawaharlal Institute of Postgraduate Medical Education & Research entrance exam." },
+                            ]},
+                        
+                ]},
                 { "name": "CEC", "description": "Commerce, Economics, Civics. Path to CA, Business, and Law." },
                 { "name": "MEC", "description": "Maths, Economics, Commerce. Great for Finance and Management." }
             ]
